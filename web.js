@@ -2,6 +2,10 @@ var express = require('express');
 
 var app = express.createServer(express.logger());
 
+app.get('/mods', function(request, response) {
+  response.send('what mods?');
+});
+
 app.get('/', function(request, response) {
   response.send('Hello World!, i am using express');
 });
