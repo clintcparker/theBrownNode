@@ -6,7 +6,7 @@ app.get('/', function(request, response) {
   response.send('Hello World!');
 });
 
-var port = process.env.PORT || 3000;
+var port = process.env.C9_PORT || process.env.PORT || 3000;
 app.listen(port, function() {
   console.log("Listening on " + port);
 });
