@@ -14,7 +14,7 @@ function newUser(fname, lname) {
     return {
         "firstName":fname,
         "lastName" :lname
-    }
+    };
 }
 
 // Return all users that have a property and value matched by the passed searchUser
@@ -32,7 +32,7 @@ function getUsers(searchUser) {
                 
         }  
     }
-    return foundUsers
+    return foundUsers;
 }
 
 users.push(newUser("fred","flintstone"));
@@ -44,6 +44,10 @@ app.get('/mods', function(request, response) {
 
 app.get("/users", function(req, res) {
     res.send(users);    
+});
+
+app.get("/search", function(req, res) {
+    res.sendfile("html/search.html");
 });
 
 app.post('/searchUsers', function(req, res) {
