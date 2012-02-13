@@ -2,6 +2,12 @@ var express = require('express');
 
 var app = express.createServer(express.logger());
 
+app.configure(function(){
+    app.use(express.static(__dirname + '/html'));
+    //app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+    app.use(express.bodyParser());
+});
+
 var users = [];
 
 function newUser(fname, lname) {
@@ -11,15 +17,38 @@ function newUser(fname, lname) {
     }
 }
 
+// Return all users that have a property and value matched by the passed searchUser
+function getUsers(searchUser) {
+    var foundUsers = [];
+    for (var i = 0; i < users.length; i++) {
+        for(var prop in searchUser) {
+            if(searchUser.hasOwnProperty(prop)) {
+                console.log(prop);
+                if (searchUser[prop] === users[i][prop]) {
+                    foundUsers.push(users[i]);
+                    break;
+                }
+            }
+                
+        }  
+    }
+    return foundUsers
+}
+
 users.push(newUser("fred","flintstone"));
 users.push(newUser("doug","funny")); //This was Ez's idea
 
 app.get('/mods', function(request, response) {
-  response.send('what mods?');
+    response.send('what mods?');
 });
 
 app.get("/users", function(req, res) {
     res.send(users);    
+});
+
+app.post('/searchUsers', function(req, res) {
+    // Pass the POST body which is assumed, maybe incorrectly, to be json
+    res.send(getUsers(req.body)); 
 });
 
 app.get('/', function(request, response) {

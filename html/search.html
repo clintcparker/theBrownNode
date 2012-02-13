@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Searchin' for love</title>
+</head>
+<body>
+  <ul>
+    <li>
+      <label for="firstName">First Name</label><input type="text" name="firstName" id="firstName" />
+    </li>
+    <li>
+      <label for="lastName">Last Name</label><input type="text" name="lastName" id="lastName" />
+    </li>
+    <li>
+      <input type="button" id="search" value="Search" />
+    </li>
+  </ul>
+  <div id="results"></div>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+  $(function() {
+    $("#search").click(function() {
+      $.ajax({
+          url: '/searchUsers',
+          data: {
+            firstName: $('#firstName').val(), 
+            lastName: $('#lastName').val()
+          },
+          type: 'POST',
+          success: function(data) {
+            console.log(data);
+            $('#results').text(JSON.stringify(data));
+          }
+      })
+    });
+  })
+</script>
+</body>
+</html>
