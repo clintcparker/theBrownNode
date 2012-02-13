@@ -2,8 +2,24 @@ var express = require('express');
 
 var app = express.createServer(express.logger());
 
+var users = [];
+
+function newUser(fname, lname) {
+    return {
+        "firstName":fname,
+        "lastName" :lname
+    }
+}
+
+users.push(newUser("fred","flintstone"));
+users.push(newUser("doug","funny")); //This was Ez's idea
+
 app.get('/mods', function(request, response) {
   response.send('what mods?');
+});
+
+app.get("/users", function(req, res) {
+    res.send(users);    
 });
 
 app.get('/', function(request, response) {
