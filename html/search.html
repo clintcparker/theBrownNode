@@ -35,11 +35,14 @@ $(function() {
         })
     });
 
-    tests.runTests();
+    testsObj.runTests();
 
 });
 
-var tests = (function(){
+var testsObj = (function(){
+    
+    var tests = [];
+    
     var sampleTest = {
         desc: "two users in system",
         url: "/users",
@@ -78,7 +81,7 @@ var tests = (function(){
     
     var addBugs = {
         desc: "add bugs bunny to system",
-        url: "/users/search",
+        url: "/users/add",
         data: {
                     firstName: "bugs",
                     lastName: "bunny"
@@ -104,7 +107,6 @@ var tests = (function(){
             return (data.length == 1);
         }
     }
-    var tests = [];
     
     addToTests(sampleTest);
     addToTests(dougIsUser);
@@ -152,7 +154,11 @@ var tests = (function(){
                     $test.css("color", color).text(curText + " " + pass);
                 },
                 error: function() {
-                    alert("tests failing");    
+                    var $test = $('#test' + this.testData.test.index),
+                        color = "red",
+                        pass = "FAIL";
+                    var curText = $test.text();
+                    $test.css("color", color).text(curText + " " + pass);
                 }
             });
         }
