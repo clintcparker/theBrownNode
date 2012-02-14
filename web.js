@@ -50,7 +50,7 @@ app.get("/search", function(req, res) {
     res.sendfile("html/search.html");
 });
 
-app.post('/searchUsers', function(req, res) {
+app.post('/users/search', function(req, res) {
     // Pass the POST body which is assumed, maybe incorrectly, to be json
     res.send(getUsers(req.body)); 
 });
