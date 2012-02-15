@@ -12,19 +12,19 @@ $(function() {
 
     //testingObj.runTests();
     testingObj.setDefaults({
-        url: "/users"    
+        url: "/users/search"    
     });
     
     testingObj.addToTests([
         {
             desc: "two users in system",
+            url: "/users",  
             testFunction: function(data) {
                 return (data.length == 2);
             }
         },
         {
             desc: "doug funny in system",
-            url: "/users/search",
             data: {
                         firstName: "doug",
                         lastName: "funny"
@@ -36,7 +36,6 @@ $(function() {
         },
         {
             desc: "fred flintstone in system",
-            url: "/users/search",
             data: {
                         firstName: "fred",
                         lastName: "flintstone"
@@ -63,7 +62,6 @@ $(function() {
         },
         {
             desc: "bugs bunny in system",
-            url: "/users/search",
             data: {
                         firstName: "bugs",
                         lastName: "bunny"

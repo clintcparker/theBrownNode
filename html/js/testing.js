@@ -4,7 +4,7 @@ var testingObj = (function(){
     
     var defaultTest = {
         desc        :"undefined test",
-        url         :"/longundefinedpath/hopefully/",
+        url         :"/longundefinedpath/hopefully/beacusewedontwantthistopass",
         data        :{},
         method      :"get",
         testFunction: function() {return false;}
