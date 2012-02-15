@@ -37,6 +37,24 @@ var testingObj = (function(){
         }
     }
     
+    function execTest(data,fun,desc) {
+        var color = "red",
+            pass = "FAIL";
+        if (fun(data)) {
+            color = "green";
+            pass = "PASS";
+        }
+        updateTest(desc, color, pass);
+    }
+    
+    function updateTest(desc, color, pass) {
+        $("#testing_current_index").val(parseInt($("#testing_current_index").val(),10) + 1);
+        $("#testsDiv").find(".testing_test_"+$("#testing_current_index").val())
+                        .css("color", color)
+                        .text(desc + " " + pass);
+        runNextTest();
+    }
+    
     function runNextTest() {
         var test = {};
         if (testsArray[$("#testing_current_index").val()]) {
@@ -46,30 +64,11 @@ var testingObj = (function(){
         }
         $.ajax({
             testObj:test,
-            async:false,
             url: test.url,
             data: test.data,
             type: test.method.toUpperCase(),
-            success: function(data) {
-                var color = "red",
-                    pass = "FAIL";
-                if (this.testObj.testFunction(data)) {
-                    color = "green";
-                    pass = "PASS";
-                }
-                $("#testing_current_index").val(parseInt($("#testing_current_index").val(),10) + 1);
-                $("#testsDiv").find(".testing_test_"+$("#testing_current_index").val())
-                                .css("color", color)
-                                .text(this.testObj.desc + " " + pass);
-                runNextTest();
-            },
-            error: function() {
-                $("#testing_current_index").val(parseInt($("#testing_current_index").val(),10) + 1);
-                $("#testsDiv").find(".testing_test_"+$("#testing_current_index").val())
-                                .css("color", "red")
-                                .text(this.testObj.desc + " FAIL");
-                runNextTest();
-            }
+            success: function (data) {execTest(data,test.testFunction, test.desc);},
+            error: function () {updateTest(test.desc, "red", "FAIL");}
         });
     }
     
