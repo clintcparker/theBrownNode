@@ -35,8 +35,8 @@ function getUsers(searchUser) {
     return foundUsers;
 }
 
-//users.push(newUser("fred","flintstone"));
-//users.push(newUser("doug","funny")); //This was Ez's idea
+users.push(newUser("fred","flintstone"));
+users.push(newUser("doug","funny")); //This was Ez's idea
 
 app.get('/mods', function(request, response) {
     response.send('what mods?');
