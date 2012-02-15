@@ -1,5 +1,7 @@
 var testingObj = (function(){
     
+    var curIndex = 0;
+    
     var defaultTest = {
         desc        :"undefined test",
         url         :"/longundefinedpath/hopefully/",
@@ -16,9 +18,13 @@ var testingObj = (function(){
     };
     
     function addToTests(testObj) {
-        var test = {};
-        $.extend(test,defaultTest, testObj);
-        testsArray.push(test);
+        if ($.isArray(testObj)) {
+            for (var i = 0, testObject;testObject = testObj[i++];){ addToTests(testObject); }    
+        } else {
+            var test = {};
+            $.extend(test,defaultTest, testObj);
+            testsArray.push(test);
+        }
     }
     
     
@@ -38,37 +44,40 @@ var testingObj = (function(){
     }
     
     function execTest(data,fun,desc) {
-        var color = "red",
-            pass = "FAIL";
-        if (fun(data)) {
-            color = "green";
-            pass = "PASS";
-        }
-        updateTest(desc, color, pass);
+        updateTest(desc, getPassObj(fun(data)));
     }
     
-    function updateTest(desc, color, pass) {
-        $("#testing_current_index").val(parseInt($("#testing_current_index").val(),10) + 1);
-        $("#testsDiv").find(".testing_test_"+$("#testing_current_index").val())
-                        .css("color", color)
-                        .text(desc + " " + pass);
+    function getPassObj(x) {
+        if (x) {
+            return { color:"green", pass:"PASS"};    
+        }    
+        return { color:"red", pass:"FAIL"};
+    }
+    
+    function updateTest(desc, passObj) {
+        curIndex++;
+        //$("#testing_current_index").val(parseInt($("#testing_current_index").val(),10) + 1);
+        //$("#testsDiv").find(".testing_test_"+$("#testing_current_index").val())
+        $("#testsDiv").find(".testing_test_"+curIndex)
+                        .css("color", passObj.color)
+                        .text(desc + " " + passObj.pass);
         runNextTest();
     }
     
     function runNextTest() {
         var test = {};
-        if (testsArray[$("#testing_current_index").val()]) {
-            test = testsArray[$("#testing_current_index").val()];
+        if (testsArray[curIndex]) {
+            test = testsArray[curIndex];
         } else {
             return true;    
         }
         $.ajax({
-            testObj:test,
+            //testObj:test,
             url: test.url,
             data: test.data,
             type: test.method.toUpperCase(),
             success: function (data) {execTest(data,test.testFunction, test.desc);},
-            error: function () {updateTest(test.desc, "red", "FAIL");}
+            error: function () {updateTest(test.desc, getPassObj(false));}
         });
     }
     
