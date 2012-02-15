@@ -35,8 +35,8 @@ function getUsers(searchUser) {
     return foundUsers;
 }
 
-users.push(newUser("fred","flintstone"));
-users.push(newUser("doug","funny")); //This was Ez's idea
+//users.push(newUser("fred","flintstone"));
+//users.push(newUser("doug","funny")); //This was Ez's idea
 
 app.get('/mods', function(request, response) {
     response.send('what mods?');
@@ -53,6 +53,10 @@ app.get("/search", function(req, res) {
 app.post('/users/search', function(req, res) {
     // Pass the POST body which is assumed, maybe incorrectly, to be json
     res.send(getUsers(req.body)); 
+});
+
+app.get("/:name",function(req,res){
+    res.sendfile("html/" + req.params.name + ".html") 
 });
 
 app.get('/', function(request, response) {

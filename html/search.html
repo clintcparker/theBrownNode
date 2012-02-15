@@ -18,6 +18,7 @@
   <div id="results"></div>
   <div id="testsDiv"></div>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="/js/testing.js"></script>
 <script type="text/javascript" charset="utf-8">
 $(function() {
     $("#search").click(function() {
@@ -34,140 +35,9 @@ $(function() {
             }
         })
     });
-
-    testsObj.runTests();
-
 });
 
-var testsObj = (function(){
-    
-    var tests = [];
-    
-    var sampleTest = {
-        desc: "two users in system",
-        url: "/users",
-        data: {},
-        method: "get",
-        testFunction: function(data) {
-            return (data.length == 2);
-        }
-    }
-    
-    var dougIsUser = {
-        desc: "doug funny in system",
-        url: "/users/search",
-        data: {
-                    firstName: "doug",
-                    lastName: "funny"
-                },
-        method: "post",
-        testFunction: function(data) {
-            return (data.length == 1);
-        }
-    }
-    
-    var fredIsUser = {
-        desc: "fred flintstone in system",
-        url: "/users/search",
-        data: {
-                    firstName: "fred",
-                    lastName: "flintstone"
-                },
-        method: "post",
-        testFunction: function(data) {
-            return (data.length == 1);
-        }
-    }
-    
-    var addBugs = {
-        desc: "add bugs bunny to system",
-        url: "/users/add",
-        data: {
-                    firstName: "bugs",
-                    lastName: "bunny"
-                },
-        method: "post",
-        testFunction: function(data) {
-            return (data == {
-                    firstName: "bugs",
-                    lastName: "bunny"
-                });
-        }
-    }
-    
-    var bugsIsUser = {
-        desc: "bugs bunny in system",
-        url: "/users/search",
-        data: {
-                    firstName: "bugs",
-                    lastName: "bunny"
-                },
-        method: "post",
-        testFunction: function(data) {
-            return (data.length == 1);
-        }
-    }
-    
-    addToTests(sampleTest);
-    addToTests(dougIsUser);
-    addToTests(fredIsUser);
-    addToTests(addBugs);
-    addToTests(bugsIsUser);
-    
-    
-    function addToTests(test) {
-        test.index = tests.length;
-        tests.push(test);
-    }
-    
-    
-    function setupTest(test) {
-        var $test = $('<div id="test' + test.index + '">'+test.desc+'</div>');
-        $tests.append($test);
-        //return $test;
-    }
-    
-    
-    function runTests() {
-        if (typeof $tests === "undefined") {
-            $tests = $("#testsDiv");     
-        }
-        for (var i = 0, test; test = tests[i++];) {
-            setupTest(test);
-            $.ajax({
-                testData:{
-                    "test":test
-                },
-                async:false,
-                url: test.url,
-                data: test.data,
-                type: test.method.toUpperCase(),
-                success: function(data) {
-                    var $test = $('#test' + this.testData.test.index),
-                        color = "red",
-                        pass = "FAIL";
-                    if (this.testData.test.testFunction(data)) {
-                        color = "green";
-                        pass = "PASS";
-                    }
-                    var curText = $test.text();
-                    $test.css("color", color).text(curText + " " + pass);
-                },
-                error: function() {
-                    var $test = $('#test' + this.testData.test.index),
-                        color = "red",
-                        pass = "FAIL";
-                    var curText = $test.text();
-                    $test.css("color", color).text(curText + " " + pass);
-                }
-            });
-        }
-    }
-    
-    return {
-        runTests : runTests    
-    }
-})();    
+   
 </script>
 </body>
 </html>

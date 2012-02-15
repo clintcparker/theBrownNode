@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Tests</title>
+</head>
+<body>
+  <div id="testsDiv"></div>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="/js/testing.js"></script>
+<script type="text/javascript" charset="utf-8">
+$(function() {
+
+    //testingObj.runTests();
+    testingObj.setDefaults({
+        url: "/users"    
+    });
+    
+    testingObj.addToTests({
+        desc: "two users in system",
+        testFunction: function(data) {
+            return (data.length == 2);
+        }
+    });
+    
+    testingObj.addToTests({
+        desc: "doug funny in system",
+        url: "/users/search",
+        data: {
+                    firstName: "doug",
+                    lastName: "funny"
+                },
+        method: "post",
+        testFunction: function(data) {
+            return (data.length == 1);
+        }
+    });
+    
+    testingObj.addToTests({
+        desc: "fred flintstone in system",
+        url: "/users/search",
+        data: {
+                    firstName: "fred",
+                    lastName: "flintstone"
+                },
+        method: "post",
+        testFunction: function(data) {
+            return (data.length == 1);
+        }
+    });
+    
+    testingObj.addToTests({
+        desc: "add bugs bunny to system",
+        url: "/users/add",
+        data: {
+                    firstName: "bugs",
+                    lastName: "bunny"
+                },
+        method: "post",
+        testFunction: function(data) {
+            return (data == {
+                    firstName: "bugs",
+                    lastName: "bunny"
+                });
+        }    
+    });
+    
+    testingObj.addToTests({
+        desc: "bugs bunny in system",
+        url: "/users/search",
+        data: {
+                    firstName: "bugs",
+                    lastName: "bunny"
+                },
+        method: "post",
+        testFunction: function(data) {
+            return (data.length == 1);
+        }   
+    });
+    
+    testingObj.setupTests();
+    testingObj.runTests();
+    
+});
+
+   
+</script>
+</body>
+</html>
