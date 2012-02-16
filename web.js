@@ -29,7 +29,6 @@ function getUsers(searchUser) {
                     break;
                 }
             }
-                
         }  
     }
     return foundUsers;
@@ -52,6 +51,21 @@ app.post("/users/add", function(req, res) {
     user.id = users.length;
     user.active = false;
     res.send(user);
+});
+
+app.get("/users/:name", function(req, res) {
+    console.log(req.params);
+    var searchResults = getUsers({ name: req.params.name }) ;
+    if ( searchResults.length > 0 ) {
+        res.send( searchResults );
+    }
+    else
+        next();
+});
+
+app.get("/users/:id", function(req, res) {
+    console.log(req.params);
+    res.send( getUsers({ id: req.params.id }) );
 });
 
 app.get("/search", function(req, res) {
