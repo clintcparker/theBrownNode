@@ -46,6 +46,14 @@ app.get("/users", function(req, res) {
     res.send(users);    
 });
 
+app.post("/users/add", function(req, res) {
+    users.push(req.body);
+    var user = users[users.length - 1];
+    user.id = users.length;
+    user.active = false;
+    res.send(user);
+});
+
 app.get("/search", function(req, res) {
     res.sendfile("html/search.html");
 });
