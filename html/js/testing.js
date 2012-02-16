@@ -1,5 +1,12 @@
+// requires Underscore.js
+// requires jQuery.js
+
+if (typeof _ === "undefined"){
+    var _ = require("./Underscore");    
+}
+
 var testingObj = (function(){
-    
+
     var curIndex = 0;
     
     var useConsole = false;
@@ -22,15 +29,15 @@ var testingObj = (function(){
                 useConsole = true;
             }
         }
-            $.extend(defaultTest, obj);
+            _.extend(defaultTest, obj); //jquery
     };
     
     function addToTests(testObj) {
-        if ($.isArray(testObj)) {
+        if (_.isArray(testObj)) { //jquery
             for (var i = 0, testObject;testObject = testObj[i++];){ addToTests(testObject); }    
         } else {
             var test = {};
-            $.extend(test,defaultTest, testObj);
+            _.extend(test,defaultTest, testObj); //jquery
             testsArray.push(test);
         }
     }
@@ -68,7 +75,7 @@ var testingObj = (function(){
         //$("#testsDiv").find(".testing_test_"+$("#testing_current_index").val())
         if (useConsole) {
             if (passObj.bool) {
-                console.debug(desc + " " + passObj.pass);    
+                console.log(desc + " " + passObj.pass);    
             } else {
                 //console.log(desc + " " + passObj.pass); 
                 console.error(desc + " " + passObj.pass);    //doesn't work in chrome?
@@ -117,4 +124,15 @@ var testingObj = (function(){
         addToTests  : addToTests,
         setupTests  : setupTests
     };
+    
+    
 })(); 
+
+if (typeof exports !== 'undefined') {
+    if (typeof module !== 'undefined' && module.exports) {
+      exports = module.exports = _;
+    }
+    exports.testingObj = testingObj;
+  }
+
+//exports.testingObj = testingObj;

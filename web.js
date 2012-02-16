@@ -1,6 +1,28 @@
 var express = require('express');
-
 var app = express.createServer(express.logger());
+var _ = require("./html/js/Underscore");
+
+var testing = require("./html/js/testing");
+var serverTests = testing.testingObj;
+
+
+
+serverTests.setDefaults({
+    useConsole:true,
+    isAjax:false
+});
+
+serverTests.addToTests({
+    desc: "newUser is outdated but works",
+    testFunction : function () { 
+        var newU = newUser("ftest","ltest");
+        return (newU.lastName == "ltest" && newU.firstName == "ftest"); 
+    }
+});
+
+console.log(newUser("ftest","ltest"));
+
+serverTests.runTests();
 
 app.configure(function(){
     app.use(express.static(__dirname + '/html'));
@@ -23,7 +45,7 @@ function getUsers(searchUser) {
     for (var i = 0; i < users.length; i++) {
         for(var prop in searchUser) {
             if(searchUser.hasOwnProperty(prop)) {
-                console.log(prop);
+                //console.log(prop);
                 if (searchUser[prop] === users[i][prop]) {
                     foundUsers.push(users[i]);
                     break;
@@ -39,7 +61,7 @@ function getUserIndices(searchUser) {
     for (var i = 0; i < users.length; i++) {
         for(var prop in searchUser) {
             if(searchUser.hasOwnProperty(prop)) {
-                console.log(prop);
+                //console.log(prop);
                 if (searchUser[prop] === users[i][prop]) {
                     foundUsers.push(i);
                     break;
@@ -72,7 +94,6 @@ app.post("/users/add", function(req, res) {
 });
 
 app.get("/users/search/:name", function(req, res, next) {
-    console.log(req.params);
     var searchResults = getUsers({ name: req.params.name }) ;
     if ( searchResults.length > 0 ) {
         res.send( searchResults );
@@ -82,7 +103,6 @@ app.get("/users/search/:name", function(req, res, next) {
 });
 
 app.get("/users/search/:id", function(req, res) {
-    console.log(req.params);
     res.send( getUsers({ id: parseInt(req.params.id, 10) }) );
 });
 
