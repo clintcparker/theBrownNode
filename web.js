@@ -34,6 +34,24 @@ function getUsers(searchUser) {
     return foundUsers;
 }
 
+function getUserIndices(searchUser) {
+    var foundUsers = [];
+    for (var i = 0; i < users.length; i++) {
+        for(var prop in searchUser) {
+            if(searchUser.hasOwnProperty(prop)) {
+                console.log(prop);
+                if (searchUser[prop] === users[i][prop]) {
+                    foundUsers.push(i);
+                    break;
+                }
+            }
+        }  
+    }
+    return foundUsers;
+}
+
+
+
 //users.push(newUser("fred","flintstone"));
 //users.push(newUser("doug","funny")); //This was Ez's idea
 
@@ -53,7 +71,7 @@ app.post("/users/add", function(req, res) {
     res.send(user);
 });
 
-app.get("/users/:name", function(req, res) {
+app.get("/users/search/:name", function(req, res, next) {
     console.log(req.params);
     var searchResults = getUsers({ name: req.params.name }) ;
     if ( searchResults.length > 0 ) {
@@ -63,9 +81,19 @@ app.get("/users/:name", function(req, res) {
         next();
 });
 
-app.get("/users/:id", function(req, res) {
+app.get("/users/search/:id", function(req, res) {
     console.log(req.params);
-    res.send( getUsers({ id: req.params.id }) );
+    res.send( getUsers({ id: parseInt(req.params.id, 10) }) );
+});
+
+app.post("/users/update", function(req, res) {
+    var user = req.body;
+    var foundUserIndex = getUserIndices({ id: parseInt(user.id, 10) });
+    for(var i=0,l=foundUserIndex.length;i<l;i++) {
+       users[foundUserIndex[i]].name = user.name; 
+    
+    }
+    res.send(getUsers({id:parseInt(user.id,10)}));
 });
 
 app.get("/search", function(req, res) {

@@ -48,7 +48,7 @@ $(function() {
         },
         {
             desc: 'casual encounter',
-            url: "/users/first guy",  
+            url: "/users/search/first guy",  
             method: "get",
             data: {  },
             testFunction: function(data) {
@@ -56,6 +56,33 @@ $(function() {
                 /* {   }
                 */                
                 return ( data.length > 0 && data[0].name == "first guy" );
+            }
+        },
+        {
+            desc: 'second date',
+            url: "/users/search/2",  
+            method: "get",
+            data: {  },
+            testFunction: function(data) {
+                // expect what?
+                /* {   }
+                */                
+                return ( data.length > 0 && data[0].id == 2 );
+            }
+        }
+        ,
+        {
+            desc: 'update user',
+            url: "/users/update",  
+            method: "post",
+            data: {
+                id: 2,
+                name: "updated name"  },
+            testFunction: function(data) {
+                // expect what?
+                /* {   }
+                */                
+                return ( data.length > 0 && data[0].id == 2 && data[0].name == "updated name");
             }
         }
         /*,
