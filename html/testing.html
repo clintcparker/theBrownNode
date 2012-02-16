@@ -13,16 +13,22 @@ $(function() {
     //testingObj.runTests();
     testingObj.setDefaults({
         url         : "/users/search",
-        useConsole  :false,
-        isAjax      :true
+        useConsole  : false,
+        isAjax      : true
     });
     
     testingObj.addToTests([
         {
-            desc: "two users in system",
-            url: "/users",  
+            desc: "add first user",
+            url: "/users",
+            data: { name: "first guy" },
             testFunction: function(data) {
-                return (data.length == 2);
+                /* expect?
+                { id: <val>
+                  name: <val>
+                  active: false
+                */
+                return (data.id == 1);
             }
         },
         {

@@ -29,7 +29,6 @@ function getUsers(searchUser) {
                     break;
                 }
             }
-                
         }  
     }
     return foundUsers;
@@ -44,6 +43,12 @@ app.get('/mods', function(request, response) {
 
 app.get("/users", function(req, res) {
     res.send(users);    
+});
+
+app.post("/users/add", function(req, res) {
+    users.push(req, res);
+    var user = users[users.length - 1];
+    user = users.length;
 });
 
 app.get("/search", function(req, res) {
