@@ -2,18 +2,26 @@ var testingObj = (function(){
     
     var curIndex = 0;
     
+    var useConsole = false;
+    
     var defaultTest = {
         desc        :"undefined test",
         url         :"/longundefinedpath/hopefully/beacusewedontwantthistopass",
         data        :{},
         method      :"get",
-        testFunction: function() {return false;}
+        testFunction: function() {return false;},
+        isAjax      :false
     };
     
     var testsArray = [];
     
     
     var setDefaults = function(obj) {
+        if (obj.hasOwnProperty("useConsole")) {
+            if (obj.useConsole == true) {
+                useConsole = true;
+            }
+        }
             $.extend(defaultTest, obj);
     };
     
@@ -49,18 +57,27 @@ var testingObj = (function(){
     
     function getPassObj(x) {
         if (x) {
-            return { color:"green", pass:"PASS"};    
+            return { color:"green", pass:"PASS", bool:true};    
         }    
-        return { color:"red", pass:"FAIL"};
+        return { color:"red", pass:"FAIL", bool:false};
     }
     
     function updateTest(desc, passObj) {
         curIndex++;
         //$("#testing_current_index").val(parseInt($("#testing_current_index").val(),10) + 1);
         //$("#testsDiv").find(".testing_test_"+$("#testing_current_index").val())
-        $("#testsDiv").find(".testing_test_"+curIndex)
-                        .css("color", passObj.color)
-                        .text(desc + " " + passObj.pass);
+        if (useConsole) {
+            if (passObj.bool) {
+                console.debug(desc + " " + passObj.pass);    
+            } else {
+                //console.log(desc + " " + passObj.pass); 
+                console.error(desc + " " + passObj.pass);    //doesn't work in chrome?
+            }
+        } else {
+            $("#testsDiv").find(".testing_test_"+curIndex)
+                            .css("color", passObj.color)
+                            .text(desc + " " + passObj.pass);
+        }
         runNextTest();
     }
     
@@ -71,18 +88,24 @@ var testingObj = (function(){
         } else {
             return true;    
         }
-        $.ajax({
-            //testObj:test,
-            url: test.url,
-            data: test.data,
-            type: test.method.toUpperCase(),
-            success: function (data) {execTest(data,test.testFunction, test.desc);},
-            error: function () {updateTest(test.desc, getPassObj(false));}
-        });
+        if (test.isAjax) {
+            $.ajax({
+                //testObj:test,
+                url: test.url,
+                data: test.data,
+                type: test.method.toUpperCase(),
+                success: function (data) {execTest(data,test.testFunction, test.desc);},
+                error: function () {updateTest(test.desc, getPassObj(false));}
+            });
+        } else {
+           execTest({},test.testFunction, test.desc); 
+        }
     }
     
     function runTests() {
-        setupTests();
+        if (!useConsole) {
+            setupTests();
+        }
         runNextTest();
     }
     
