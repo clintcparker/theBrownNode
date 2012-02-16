@@ -13,8 +13,8 @@ $(function() {
     //testingObj.runTests();
     testingObj.setDefaults({
         url         : "/users/search",
-        useConsole  :false,
-        isAjax      :true
+        useConsole  : false,
+        isAjax      : true
     });
     
     testingObj.addToTests([
@@ -44,6 +44,18 @@ $(function() {
                       active:false
                 */
                 return (data.name == "second guy" && data.id == 2 && data.active == false);
+            }
+        },
+        {
+            desc: 'casual encounter',
+            url: "/users/first guy",  
+            method: "get",
+            data: {  },
+            testFunction: function(data) {
+                // expect what?
+                /* {   }
+                */                
+                return ( data.length > 0 && data[0].name == "first guy" );
             }
         }
         /*,
