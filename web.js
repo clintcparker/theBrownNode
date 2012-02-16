@@ -48,7 +48,9 @@ app.get("/users", function(req, res) {
 app.post("/users/add", function(req, res) {
     users.push(req, res);
     var user = users[users.length - 1];
-    user = users.length;
+    user.id = users.length;
+    user.active = false;
+    res.send(user);
 });
 
 app.get("/search", function(req, res) {
