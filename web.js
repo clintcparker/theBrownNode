@@ -46,11 +46,26 @@ app.get("/users", function(req, res) {
 });
 
 app.post("/users/add", function(req, res) {
-    users.push(req, res);
+    users.push(req.body);
     var user = users[users.length - 1];
     user.id = users.length;
     user.active = false;
     res.send(user);
+});
+
+app.get("/users/:name", function(req, res) {
+    console.log(req.params);
+    var searchResults = getUsers({ name: req.params.name }) ;
+    if ( searchResults.length > 0 ) {
+        res.send( searchResults );
+    }
+    else
+        next();
+});
+
+app.get("/users/:id", function(req, res) {
+    console.log(req.params);
+    res.send( getUsers({ id: req.params.id }) );
 });
 
 app.get("/search", function(req, res) {
