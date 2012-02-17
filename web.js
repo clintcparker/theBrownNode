@@ -2,25 +2,29 @@ var express = require('express');
 var app = express.createServer(express.logger());
 var _ = require("./html/js/Underscore");
 
-var testing = require("./html/js/testing");
-var serverTests = testing.testingObj;
-
-
+var test = require("./html/js/testing");
+var serverTests = test.testingObj;
 
 serverTests.setDefaults({
     useConsole:true,
     isAjax:false
 });
+var obj = {testKey:"testValue"};
+var arr = [{testKey:"testValue"},{testKey2:"testValue2"}];
 
 serverTests.addToTests({
-    desc: "newUser is outdated but works",
+    desc: 'getObjsInArray, obj:{testKey:"testValue"}, arr:[{testKey:"testValue"},{testKey2:"testValue2"}]',
     testFunction : function () { 
-        var newU = newUser("ftest","ltest");
-        return (newU.lastName == "ltest" && newU.firstName == "ftest"); 
+        return (getObjsInArray(obj, arr).length > 0 && getObjsInArray(obj, arr)[0].testKey === obj.testKey); 
     }
 });
 
-console.log(newUser("ftest","ltest"));
+serverTests.addToTests({
+    desc: 'getObjIndicesInArray, obj:{testKey:"testValue"}, arr:[{testKey:"testValue"},{testKey2:"testValue2"}]',
+    testFunction : function () { 
+        return ((getObjIndicesInArray(obj, arr).length > 0) && (getObjIndicesInArray(obj, arr)[0] === 0)); 
+    }
+});
 
 serverTests.runTests();
 
@@ -32,47 +36,57 @@ app.configure(function(){
 
 var users = [];
 
-function newUser(fname, lname) {
-    return {
-        "firstName":fname,
-        "lastName" :lname
-    };
-}
-
 // Return all users that have a property and value matched by the passed searchUser
-function getUsers(searchUser) {
-    var foundUsers = [];
-    for (var i = 0; i < users.length; i++) {
-        for(var prop in searchUser) {
-            if(searchUser.hasOwnProperty(prop)) {
+function getObjsInArray(obj, array) {
+    var foundObjs = [];
+    for (var i = 0; i < array.length; i++) {
+        for(var prop in obj) {
+            if(obj.hasOwnProperty(prop)) {
                 //console.log(prop);
-                if (searchUser[prop] === users[i][prop]) {
-                    foundUsers.push(users[i]);
+                if (obj[prop] === array[i][prop]) {
+                    foundObjs.push(array[i]);
                     break;
                 }
             }
         }  
     }
-    return foundUsers;
+    return foundObjs;
+}
+
+function getObjIndicesInArray(obj, array) {
+    var foundIndices = [];
+    for (var i = 0; i < array.length; i++) {
+        for(var prop in obj) {
+            if(obj.hasOwnProperty(prop)) {
+                //console.log(prop);
+                if (obj[prop] === array[i][prop]) {
+                    foundIndices.push(i);
+                    break;
+                }
+            }
+        }  
+    }
+    return foundIndices;
+}
+
+function getUsers(searchUser) {
+    return getObjsInArray(searchUser, users);
 }
 
 function getUserIndices(searchUser) {
+    return getObjIndicesInArray(searchUser, users);
+}
+
+function updateUser(searchUser) {
     var foundUsers = [];
-    for (var i = 0; i < users.length; i++) {
-        for(var prop in searchUser) {
-            if(searchUser.hasOwnProperty(prop)) {
-                //console.log(prop);
-                if (searchUser[prop] === users[i][prop]) {
-                    foundUsers.push(i);
-                    break;
-                }
-            }
-        }  
+    var user_id = parseInt(searchUser.id, 10);
+    var foundUserIndices = getUserIndices({ id: user_id });
+    if (foundUserIndices.length > 0) {
+        _.extend(users[foundUserIndices[0]], searchUser);
+        foundUsers.push(users[foundUserIndices[0]]);
     }
     return foundUsers;
 }
-
-
 
 //users.push(newUser("fred","flintstone"));
 //users.push(newUser("doug","funny")); //This was Ez's idea
@@ -107,17 +121,7 @@ app.get("/users/search/:id", function(req, res) {
 });
 
 app.post("/users/update", function(req, res) {
-    var user = req.body;
-    var foundUserIndex = getUserIndices({ id: parseInt(user.id, 10) });
-    for(var i=0,l=foundUserIndex.length;i<l;i++) {
-       users[foundUserIndex[i]].name = user.name; 
-    
-    }
-    res.send(getUsers({id:parseInt(user.id,10)}));
-});
-
-app.get("/search", function(req, res) {
-    res.sendfile("html/search.html");
+    res.send(updateUser(req.body));
 });
 
 app.post('/users/search', function(req, res) {

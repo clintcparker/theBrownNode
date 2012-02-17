@@ -130,7 +130,7 @@ var testingObj = (function(){
 
 if (typeof exports !== 'undefined') {
     if (typeof module !== 'undefined' && module.exports) {
-      exports = module.exports = _;
+      exports = module.exports = testingObj;
     }
     exports.testingObj = testingObj;
   }
